@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Traffic Management System</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+    }
+
+    /* Header */
+    .navbar {
+      
+  background-color: #27ae60; /* Green */
+}
+
+    
+
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: white !important;
+    }
+
+    .btn-control {
+      border-radius: 25px;
+      padding: 10px 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-control:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Section styling */
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2a5298;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .section-description {
+      font-size: 1.1rem;
+      color: #666;
+      text-align: center;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    /* Video Collage */
+    .video-collage {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 15px;
+      height: 500px;
+      margin: 2rem 0;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .video-item {
+      position: relative;
+      overflow: hidden;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+
+    .video-main {
+      grid-row: span 2;
+    }
+
+    .video-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .video-label {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* Traffic Lights */
+    .traffic-section {
+      background: #f8f9fa;
+      padding: 4rem 0;
+      margin: 4rem 0;
+      border-radius: 20px;
+    }
+
+    .traffic-lights {
+      display: flex;
+      justify-content: space-around;
+      margin: 3rem 0;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .light {
+      width: 80px;
+      height: 220px;
+      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+      border-radius: 25px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .bulb {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #333;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      transition: all 0.5s ease;
+    }
+
+    .bulb.red {
+      background: radial-gradient(circle at 30% 30%, #ff4757, #cc0000);
+      box-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
+    }
+
+    .bulb.yellow {
+      background: radial-gradient(circle at 30% 30%, #ffa502, #ff6348);
+      box-shadow: 0 0 20px rgba(255, 165, 2, 0.6);
+    }
+
+    .bulb.green {
+      background: radial-gradient(circle at 30% 30%, #2ed573, #00a80e);
+      box-shadow: 0 0 20px rgba(46, 213, 115, 0.6);
+    }
+
+    .light-label {
+      position: absolute;
+      bottom: -30px;
+      color: #666;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* Dashboard Cards */
+    .dashboard-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid #e9ecef;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .metric-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #2a5298;
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-label {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* Map */
+    .map-container {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      margin: 2rem 0;
+    }
+
+    /* Process Flow */
+    .process-flow {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 4rem 0;
+      margin: 4rem 0;
+      border-radius: 20px;
+    }
+
+    .process-step {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .process-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem auto;
+      font-size: 2rem;
+    }
+
+    .process-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .process-desc {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    /* Footer */
+    footer {
+      background: #2a5298;
+      color: white;
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .video-collage {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      
+      .video-main {
+        grid-row: span 1;
+        height: 300px;
+      }
+      
+      .video-item {
+        height: 200px;
+      }
+      
+      .traffic-lights {
+        justify-content: center;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="logo.png" alt="logo" style="height:120px; width:180px;">
+        Smart Traffic Management System
+      </a>
+      <div class="d-flex">
+        <button class="btn btn-success btn-control me-3" onclick="startSimulation()">
+          <i class="fas fa-play me-2"></i>Start System
+        </button>
+        <button class="btn btn-danger btn-control" onclick="endSimulation()">
+          <i class="fas fa-stop me-2"></i>Stop System
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="container mt-5">
+    <h1 class="section-title">AI-Powered Traffic Management</h1>
+    <p class="section-description">
+      Our intelligent system processes live CCTV feeds using advanced YOLO object detection to monitor vehicle density 
+      and automatically optimize traffic signal timing for maximum efficiency and reduced congestion.
+    </p>
+  </div>
+
+  <!-- Live Camera Feeds -->
+  <div class="container">
+    <div class="video-collage">
+      <div class="video-item video-main">
+        <video controls autoplay muted loop>
+          <source src="http://172.20.214.243:8000/video-feed" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="video-label">
+          <i class="fas fa-video me-2"></i>Main Intersection
+        </div>
+      </div>
+      <div class="video-item">
+        <video controls autoplay muted loop>
+          <source src="sample1.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">
+          <i class="fas fa-camera me-1"></i>North Approach
+        </div>
+      </div>
+      <div class="video-item">
+        <video controls autoplay muted loop>
+          <source src="sample2.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">
+          <i class="fas fa-camera me-1"></i>South Approach
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Process Flow -->
+  <div class="container">
+    <div class="process-flow">
+      <div class="container">
+        <h2 class="section-title text-white mb-4">How Our System Works</h2>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="process-step">
+              <div class="process-icon">
+                <i class="fas fa-video"></i>
+              </div>
+              <div class="process-title">Live CCTV Feed</div>
+              <div class="process-desc">Continuous monitoring of all intersection approaches</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="process-step">
+              <div class="process-icon">
+                <i class="fas fa-brain"></i>
+              </div>
+              <div class="process-title">YOLO Detection</div>
+              <div class="process-desc">AI identifies and counts vehicles in real-time</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="process-step">
+              <div class="process-icon">
+                <i class="fas fa-calculator"></i>
+              </div>
+              <div class="process-title">Dynamic Calculation</div>
+              <div class="process-desc">Algorithm determines optimal signal timing</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="process-step">
+              <div class="process-icon">
+                <i class="fas fa-traffic-light"></i>
+              </div>
+              <div class="process-title">Signal Control</div>
+              <div class="process-desc">Automatic adjustment of traffic light timing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Traffic Light Control -->
+  <div class="container">
+    <div class="traffic-section">
+      <h2 class="section-title">Real-Time Traffic Signal Status</h2>
+      <p class="section-description">
+        Traffic signals are dynamically controlled based on vehicle density analysis from our AI system.
+      </p>
+      <div class="traffic-lights">
+        <div class="light" data-direction="North">
+          <div class="bulb red"></div>
+          <div class="bulb yellow"></div>
+          <div class="bulb green active"></div>
+          <div class="light-label">North</div>
+        </div>
+        <div class="light" data-direction="East">
+          <div class="bulb red active"></div>
+          <div class="bulb yellow"></div>
+          <div class="bulb green"></div>
+          <div class="light-label">East</div>
+        </div>
+        <div class="light" data-direction="South">
+          <div class="bulb red"></div>
+          <div class="bulb yellow"></div>
+          <div class="bulb green active"></div>
+          <div class="light-label">South</div>
+        </div>
+        <div class="light" data-direction="West">
+          <div class="bulb red active"></div>
+          <div class="bulb yellow"></div>
+          <div class="bulb green"></div>
+          <div class="light-label">West</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Map -->
+  <div class="container">
+    <h2 class="section-title">Traffic Flow Overview</h2>
+    <p class="section-description">
+      Real-time visualization of traffic patterns and system coverage area.
+    </p>
+    <div class="map-container">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153..." 
+              width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- Performance Dashboard -->
+  <div class="container">
+    <h2 class="section-title">System Performance Metrics</h2>
+    <p class="section-description">
+      Key performance indicators showing the effectiveness of our AI-driven traffic management.
+    </p>
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="dashboard-card">
+          <i class="fas fa-car metric-icon"></i>
+          <div class="metric-value" id="vehicleCount">284</div>
+          <div class="metric-label">Vehicles Processed</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="dashboard-card">
+          <i class="fas fa-clock metric-icon"></i>
+          <div class="metric-value" id="avgWaitTime">1.8m</div>
+          <div class="metric-label">Average Wait Time</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="dashboard-card">
+          <i class="fas fa-tachometer-alt metric-icon"></i>
+          <div class="metric-value" id="efficiency">96%</div>
+          <div class="metric-label">Traffic Efficiency</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="dashboard-card">
+          <i class="fas fa-save metric-icon"></i>
+          <div class="metric-value" id="timeSaved">12.4m</div>
+          <div class="metric-label">Time Saved Today</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p class="mb-0">
+        <i class="fas fa-copyright me-2"></i>
+        2025 Smart Traffic Management Headquarters. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    let systemRunning = false;
+    let trafficCycle = 0;
+    let cycleInterval;
+    let metricsInterval;
+
+    function startSimulation() {
+      if (systemRunning) return;
+      
+      systemRunning = true;
+      
+      // Update button
+      const startBtn = document.querySelector('.btn-success');
+      startBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>System Running';
+      startBtn.disabled = true;
+      
+      // Start traffic light cycling every 4 seconds
+      cycleInterval = setInterval(cycleTrafficLights, 4000);
+      
+      // Update metrics every 3 seconds
+      metricsInterval = setInterval(updateMetrics, 3000);
+    }
+
+    function endSimulation() {
+      if (!systemRunning) return;
+      
+      systemRunning = false;
+      clearInterval(cycleInterval);
+      clearInterval(metricsInterval);
+      
+      // Reset button
+      const startBtn = document.querySelector('.btn-success');
+      startBtn.innerHTML = '<i class="fas fa-play me-2"></i>Start System';
+      startBtn.disabled = false;
+      
+      // Reset lights to default state
+      resetTrafficLights();
+    }
+
+    function cycleTrafficLights() {
+      if (!systemRunning) return;
+      
+      const lights = document.querySelectorAll('.light');
+      
+      // Clear all active states
+      document.querySelectorAll('.bulb').forEach(bulb => {
+        bulb.classList.remove('active');
+      });
+      
+      // Cycle: North-South green, East-West red -> East-West green, North-South red
+      if (trafficCycle % 2 === 0) {
+        // North-South green
+        lights[0].querySelector('.green').classList.add('active'); // North
+        lights[2].querySelector('.green').classList.add('active'); // South
+        lights[1].querySelector('.red').classList.add('active');   // East
+        lights[3].querySelector('.red').classList.add('active');   // West
+      } else {
+        // East-West green
+        lights[1].querySelector('.green').classList.add('active'); // East
+        lights[3].querySelector('.green').classList.add('active'); // West
+        lights[0].querySelector('.red').classList.add('active');   // North
+        lights[2].querySelector('.red').classList.add('active');   // South
+      }
+      
+      trafficCycle++;
+    }
+
+    function resetTrafficLights() {
+      document.querySelectorAll('.bulb').forEach(bulb => {
+        bulb.classList.remove('active');
+      });
+      
+      // Default: North-South green, East-West red
+      const lights = document.querySelectorAll('.light');
+      lights[0].querySelector('.green').classList.add('active');
+      lights[2].querySelector('.green').classList.add('active');
+      lights[1].querySelector('.red').classList.add('active');
+      lights[3].querySelector('.red').classList.add('active');
+    }
+
+    function updateMetrics() {
+      if (!systemRunning) return;
+      
+      // Simulate realistic metric changes
+      const vehicleCount = Math.floor(Math.random() * 60) + 250;
+      const waitTime = (Math.random() * 1.5 + 1.2).toFixed(1);
+      const efficiency = Math.floor(Math.random() * 5) + 94;
+      const timeSaved = (Math.random() * 5 + 10).toFixed(1);
+      
+      document.getElementById('vehicleCount').textContent = vehicleCount;
+      document.getElementById('avgWaitTime').textContent = waitTime + 'm';
+      document.getElementById('efficiency').textContent = efficiency + '%';
+      document.getElementById('timeSaved').textContent = timeSaved + 'm';
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      resetTrafficLights();
+    });
+  </script>
+</body>
+
+
+</html>
